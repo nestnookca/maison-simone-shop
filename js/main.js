@@ -54,11 +54,11 @@ function productCard(p){
   <div class="product-card reveal" data-cat="${p.cat}">
     <a href="produit.html?id=${p.id}" class="pc-media">
       ${badge}
-      <svg><use href="#${p.icon}"/></svg>
+      <img src="${p.img}" alt="${p.name}" loading="lazy">
       <div class="pc-quick"><a class="btn small ghost" href="produit.html?id=${p.id}"><span>Voir le produit</span></a></div>
     </a>
     <div class="pc-body">
-      <span class="pc-cat">${p.cat === "soins" ? "Soins visage" : "Appareils"}</span>
+      <span class="pc-cat">${CATEGORIES[p.cat]}</span>
       <a href="produit.html?id=${p.id}"><h3 class="pc-title">${p.name}</h3></a>
       <p class="pc-desc">${p.short}</p>
       <div class="pc-foot">
@@ -125,21 +125,21 @@ function renderProductDetail(){
     <div class="split">
       <div class="split-art reveal in">
         ${p.badge ? `<span class="pc-badge" style="position:absolute;top:20px;left:20px">${p.badge}</span>` : ""}
-        <svg><use href="#${p.icon}"/></svg>
+        <img src="${p.img}" alt="${p.name}">
       </div>
       <div class="reveal in">
-        <span class="pc-cat">${p.cat === "soins" ? "Soins visage" : "Appareils professionnels"}</span>
+        <span class="pc-cat">${CATEGORIES[p.cat]}</span>
         <h1 class="serif" style="font-size:2.4rem;margin-top:10px">${p.name}</h1>
         <div class="pc-price" style="font-size:1.6rem;margin-top:16px">
           ${p.old ? `<span class="old">${fmtPrice(p.old)} $</span>` : ""}${fmtPrice(p.price)} $
-          <span style="font-size:.7rem;color:var(--cream-dim);font-family:'Jost',sans-serif">— ${p.vol}</span>
+          ${p.vol ? `<span style="font-size:.7rem;color:var(--cream-dim);font-family:'Jost',sans-serif">— ${p.vol}</span>` : ""}
         </div>
         <p style="color:var(--cream-dim);margin-top:22px">${p.desc}</p>
         <div class="divider left"></div>
-        <p style="font-size:.82rem;color:var(--gold-light);margin-bottom:6px"><b>Mode d'emploi</b></p>
-        <p style="font-size:.86rem;color:var(--cream-dim)">${p.use}</p>
-        <p style="font-size:.82rem;color:var(--gold-light);margin:16px 0 6px"><b>Ingrédients clés</b></p>
-        <p style="font-size:.86rem;color:var(--cream-dim)">${p.ingr}</p>
+        ${p.inc ? `<p style="font-size:.82rem;color:var(--gold-light);margin-bottom:6px"><b>Contenu du coffret</b></p>
+        <p style="font-size:.86rem;color:var(--cream-dim)">${p.inc}</p>` : ""}
+        ${p.ingr ? `<p style="font-size:.82rem;color:var(--gold-light);margin:16px 0 6px"><b>Ingrédients clés</b></p>
+        <p style="font-size:.86rem;color:var(--cream-dim)">${p.ingr}</p>` : ""}
         <div style="display:flex;gap:16px;margin-top:34px;align-items:center;flex-wrap:wrap">
           <button class="btn solid" data-add="${p.id}"><span>Ajouter au panier</span></button>
           <a href="panier.html" class="btn ghost"><span>Voir le panier</span></a>
@@ -181,8 +181,8 @@ function renderCart(){
       <tr data-row="${l.id}">
         <td>
           <div class="cart-item">
-            <svg><use href="#${l.product.icon}"/></svg>
-            <div><b>${l.product.name}</b><span>${l.product.vol}</span>
+            <img src="${l.product.img}" alt="">
+            <div><b>${l.product.name}</b><span>${l.product.vol || ""}</span>
               <a class="remove-link" data-remove="${l.id}">Retirer</a>
             </div>
           </div>
@@ -200,10 +200,10 @@ function renderCart(){
 
     const mobile = lines.map(l => `
       <div class="mcart-item" data-row="${l.id}">
-        <svg><use href="#${l.product.icon}"/></svg>
+        <img src="${l.product.img}" alt="">
         <div style="flex:1">
           <b style="font-family:'Cormorant Garamond',serif;font-size:1.05rem">${l.product.name}</b>
-          <div style="font-size:.78rem;color:var(--cream-dim);margin:4px 0 10px">${fmtPrice(l.product.price)} $ · ${l.product.vol}</div>
+          <div style="font-size:.78rem;color:var(--cream-dim);margin:4px 0 10px">${fmtPrice(l.product.price)} $${l.product.vol ? " · " + l.product.vol : ""}</div>
           <div style="display:flex;justify-content:space-between;align-items:center">
             <div class="qty-box"><button data-dec="${l.id}">–</button><input type="text" value="${l.qty}" readonly><button data-inc="${l.id}">+</button></div>
             <a class="remove-link" data-remove="${l.id}">Retirer</a>
