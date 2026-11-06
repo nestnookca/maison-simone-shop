@@ -42,6 +42,7 @@ const PRODUCTS = [
   },
   {
     "id": "roses-eternelles",
+    "options": {"label": "Coloris", "values": ["Noir", "Rose", "Blanc"]},
     "cat": "roses",
     "img": "assets/img/products/everlasting-rose-bouquet-1.jpg",
     "img2": "assets/img/products/everlasting-rose-bouquet-2.jpg",

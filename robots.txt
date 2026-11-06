@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /panier.html
+Disallow: /commande.html
+
+Sitemap: https://maisonsimon.shop/sitemap.xml
