@@ -67,11 +67,11 @@ function postToService(payload){
 }
 
 /* ---------- Product card markup ---------- */
-function productCard(p){
+function productCard(p, idx = 0){
   const oldPrice = p.old ? `<span class="old">${fmtPrice(p.old)} $</span>` : "";
   const badge = p.badge ? `<span class="pc-badge">${p.badge}</span>` : "";
   return `
-  <div class="product-card reveal" data-cat="${p.cat}">
+  <div class="product-card reveal" data-cat="${p.cat}" style="--i:${idx % 4}">
     <a href="produit.html?id=${p.id}" class="pc-media">
       ${badge}
       <img src="${p.img}" alt="${p.name}" loading="lazy">
@@ -84,7 +84,7 @@ function productCard(p){
       <div class="pc-foot">
         <div class="pc-price">${oldPrice}${fmtPrice(p.price)} $</div>
         <button class="add-btn" data-add="${p.id}" aria-label="Ajouter au panier : ${p.name}">
-          <svg style="width:18px;height:18px"><use href="#i-cart"/></svg>
+          <svg style="width:15px;height:15px"><use href="#i-cart"/></svg><span>Ajouter</span>
         </button>
       </div>
     </div>
@@ -100,6 +100,8 @@ function bindAddButtons(root=document, after){
       if (p.options){ location.href = "produit.html?id=" + id; return; }
       addToCart(id, 1);
       showToast("Ajouté au panier", p.name);
+      const lab = btn.querySelector("span");
+      if (lab){ const t = lab.textContent; lab.textContent = "Ajouté ✓"; btn.classList.add("added"); setTimeout(() => { lab.textContent = t; btn.classList.remove("added"); }, 1600); }
       if (after) after();
     });
   });
@@ -123,6 +125,7 @@ function renderCatalogue(){
   const params = new URLSearchParams(location.search);
   let active = params.get("cat") || "tous";
   const search = document.querySelector("[data-search]");
+  if (search && params.get("q")) search.value = params.get("q");
   const sort = document.querySelector("[data-sort]");
   const count = document.querySelector("[data-count]");
 
@@ -136,7 +139,7 @@ function renderCatalogue(){
     else if (mode === "nom") list.sort((a, b) => a.name.localeCompare(b.name, "fr"));
     else if (mode === "ventes") list.sort((a, b) => (b.badge === "Meilleure vente") - (a.badge === "Meilleure vente"));
     el.innerHTML = list.length
-      ? list.map(productCard).join("")
+      ? list.map((p, i) => productCard(p, i)).join("")
       : `<p class="no-result">Aucun produit ne correspond à votre recherche.</p>`;
     if (count) count.textContent = `${list.length} produit${list.length > 1 ? "s" : ""}`;
     bindAddButtons(el);
