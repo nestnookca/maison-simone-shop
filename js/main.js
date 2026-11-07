@@ -257,6 +257,30 @@ function shippingBar(subtotal){
     : `<div class="ship-bar ok"><p>✓ Votre commande est admissible à la livraison gratuite</p><div class="bar"><i style="width:100%"></i></div></div>`;
 }
 
+/* ---------- Paiement Stripe (via le Worker) ---------- */
+function startStripeCheckout(e){
+  const btn = e.currentTarget;
+  const err = document.querySelector("[data-pay-err]");
+  const label = btn.querySelector("span");
+  err.hidden = true;
+  btn.disabled = true; label.textContent = "Redirection vers le paiement…";
+  fetch(SITE_CONFIG.checkoutEndpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      items: cartLines().map(l => ({ id: l.product.id, qty: l.qty, variant: l.variant })),
+      coupon: cartTotals().coupon
+    })
+  }).then(r => r.json()).then(d => {
+    if (d.url) location.href = d.url;
+    else throw new Error(d.error || "Erreur");
+  }).catch(() => {
+    btn.disabled = false; label.textContent = "Payer en toute sécurité";
+    err.textContent = "Le paiement est momentanément indisponible. Veuillez réessayer ou nous écrire à info@maisonsimon.shop.";
+    err.hidden = false;
+  });
+}
+
 function renderCart(){
   const el = document.querySelector("[data-cart]");
   if (!el) return;
@@ -359,8 +383,14 @@ function renderCart(){
         <button type="submit">Appliquer</button>
       </form>
       <p class="coupon-msg" data-coupon-msg>Nouveau client ? <a href="#" data-open-promo>Obtenez 10&nbsp;% de rabais</a></p>`}
-      <a href="commande.html" class="btn solid block" style="margin-top:24px ${t.subtotal===0?';pointer-events:none;opacity:.4':''}"><span>Passer à la caisse</span></a>
-      <p style="font-size:.7rem;color:var(--cream-dim);margin-top:14px;text-align:center">Site de démonstration — aucun paiement réel n'est traité.</p>`;
+      ${SITE_CONFIG.checkoutEndpoint
+        ? `<button type="button" class="btn solid block" data-pay style="margin-top:24px ${t.subtotal===0?';pointer-events:none;opacity:.4':''}"><span>Payer en toute sécurité</span></button>
+      <p class="pay-err" data-pay-err hidden></p>
+      <p style="font-size:.7rem;color:var(--cream-dim);margin-top:14px;text-align:center"><svg style="width:12px;height:12px;vertical-align:-1px"><use href="#i-lock"/></svg> Paiement sécurisé par Stripe. Adresse de livraison et taxes à l'étape suivante.</p>`
+        : `<a href="commande.html" class="btn solid block" style="margin-top:24px ${t.subtotal===0?';pointer-events:none;opacity:.4':''}"><span>Passer à la caisse</span></a>
+      <p style="font-size:.7rem;color:var(--cream-dim);margin-top:14px;text-align:center">Site de démonstration — aucun paiement réel n'est traité.</p>`}`;
+
+    sum.querySelector("[data-pay]")?.addEventListener("click", startStripeCheckout);
 
     sum.querySelector("[data-coupon-form]")?.addEventListener("submit", (e) => {
       e.preventDefault();

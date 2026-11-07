@@ -9,6 +9,11 @@ const SITE_CONFIG = {
   shippingFee: 12,         // frais de livraison sinon ($)
   taxRate: 0.14975,        // TPS + TVQ (estimation)
 
+  // Paiement Stripe : adresse du Worker déployé (voir worker/README.md),
+  // ex. "https://maison-simone-checkout.VOTRE-COMPTE.workers.dev".
+  // Laissée vide, la caisse reste en mode démonstration (aucun paiement réel).
+  checkoutEndpoint: "",
+
   // Adresse du service qui reçoit les formulaires (courriels du popup, infolettre,
   // messages de contact et commandes). Exemples : Formspree, Web3Forms, Brevo, Make/Zapier.
   // Laissée vide, rien n'est envoyé : le code promo s'affiche simplement à l'écran.

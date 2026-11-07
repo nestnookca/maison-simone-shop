@@ -1,0 +1,8 @@
+name = "maison-simone-checkout"
+main = "stripe-checkout.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+SITE_URL = "https://maisonsimon.shop"
+AUTOMATIC_TAX = "0"
+# La clé secrète ne va JAMAIS dans ce fichier : npx wrangler secret put STRIPE_SECRET_KEY
