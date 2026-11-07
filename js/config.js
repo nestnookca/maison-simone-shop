@@ -12,7 +12,7 @@ const SITE_CONFIG = {
   // Paiement Stripe : adresse du Worker déployé (voir worker/README.md),
   // ex. "https://maison-simone-checkout.VOTRE-COMPTE.workers.dev".
   // Laissée vide, la caisse reste en mode démonstration (aucun paiement réel).
-  checkoutEndpoint: "",
+  checkoutEndpoint: "https://maison-simone-checkout.maisonsimone.workers.dev",
 
   // Adresse du service qui reçoit les formulaires (courriels du popup, infolettre,
   // messages de contact et commandes). Exemples : Formspree, Web3Forms, Brevo, Make/Zapier.
