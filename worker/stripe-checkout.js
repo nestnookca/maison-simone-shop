@@ -13,6 +13,11 @@ import { CATALOG } from "./catalog.js";
 
 const COUPON_CODE = "BIENVENUE10";
 const COUPON_PERCENT = 10;
+// Taxes du Québec (appliquées aux produits, après rabais)
+const TAXES = [
+  { name: "TPS", percentage: "5" },
+  { name: "TVQ", percentage: "9.975" }
+];
 const FREE_SHIPPING_FROM_CENTS = 10000; // 100 $
 const SHIPPING_FEE_CENTS = 1200;        // 12 $
 
@@ -50,6 +55,9 @@ async function handle(request, env) {
     params.set("phone_number_collection[enabled]", "true");
     params.append("shipping_address_collection[allowed_countries][]", "CA");
 
+    // Taux de taxes Stripe (créés une seule fois, ensuite retrouvés)
+    const taxIds = env.AUTOMATIC_TAX === "1" ? [] : await getTaxRateIds(env);
+
     let subtotal = 0;
     items.forEach((it, i) => {
       const p = CATALOG[it.id];
@@ -66,6 +74,7 @@ async function handle(request, env) {
       params.set(`line_items[${i}][price_data][unit_amount]`, String(p.cents));
       params.set(`line_items[${i}][price_data][product_data][name]`, name);
       if (env.AUTOMATIC_TAX === "1") params.set(`line_items[${i}][price_data][tax_behavior]`, "exclusive");
+      taxIds.forEach((id, k) => params.set(`line_items[${i}][tax_rates][${k}]`, id));
     });
 
     // Livraison : gratuite dès 100 $ (avant rabais), sinon 12 $
@@ -92,6 +101,25 @@ async function handle(request, env) {
     if (!session.url) return json({ error: (session.error && session.error.message) || "Erreur Stripe" }, 502, cors);
     return json({ url: session.url }, 200, cors);
   }
+}
+
+async function getTaxRateIds(env) {
+  const r = await fetch("https://api.stripe.com/v1/tax_rates?active=true&limit=100", {
+    headers: { Authorization: "Bearer " + env.STRIPE_SECRET_KEY }
+  });
+  const list = ((await r.json()).data) || [];
+  const ids = [];
+  for (const t of TAXES) {
+    let found = list.find(x => x.display_name === t.name && Number(x.percentage) === Number(t.percentage) && x.inclusive === false && x.jurisdiction === "QC");
+    if (!found) {
+      found = await stripe(env, "/v1/tax_rates", new URLSearchParams({
+        display_name: t.name, percentage: t.percentage, inclusive: "false", country: "CA", jurisdiction: "QC"
+      }));
+    }
+    if (!found.id) throw new Error("Impossible de configurer la taxe " + t.name);
+    ids.push(found.id);
+  }
+  return ids;
 }
 
 async function stripe(env, path, params) {
