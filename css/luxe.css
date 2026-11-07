@@ -172,3 +172,22 @@ body::after{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opac
 .offer-favs b{font-weight:400;font-size:.7rem;line-height:1.25;color:var(--cream)}
 .offer-favs i{font-style:normal;font-family:'Cormorant Garamond',serif;color:var(--gold-light);font-size:1rem}
 @media(max-width:900px){.hero-offer{width:min(420px,100%);margin:0 auto 20px}}
+
+/* ===== Hero v3 : plus compact, tout visible dès l'arrivée ===== */
+.hero{min-height:0}
+.hero-inner{padding:56px 32px 64px;gap:56px;align-items:center}
+.hero h1{font-size:clamp(2.6rem,4.4vw,4.1rem)}
+.hero p.lead{margin-top:20px;font-size:1rem}
+.hero-cta{margin-top:30px}
+.hero-stats{margin-top:36px;padding-top:20px}
+.hero-stats div b{font-size:1.8rem}
+.hero-offer{width:min(400px,100%);padding:30px 30px 26px;box-shadow:0 30px 70px rgba(0,0,0,.55)}
+.hero-offer::before,.hero-offer::after{display:none}
+.offer-big{font-size:clamp(3.4rem,5vw,4.4rem);margin-top:8px}
+.offer-sub{font-size:1.2rem}
+.offer-form{margin-top:18px;gap:10px}
+.offer-form input{padding:13px 14px}
+.offer-favs{margin-top:22px;padding-top:20px;gap:8px}
+.offer-label{position:static;transform:none;grid-column:1/-1;background:none;padding:0 0 6px}
+.offer-favs img{width:62px;height:62px}
+@media(max-width:900px){.hero-inner{padding:48px 22px 56px;gap:36px}.hero-offer{margin:0 auto}}
