@@ -146,3 +146,29 @@ body::after{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opac
 [data-product-detail] .split{align-items:start}
 @media(min-width:901px){[data-product-detail] .split > div:first-child{position:sticky;top:130px}}
 .product-card .pc-media{aspect-ratio:1/1}
+
+/* ===== Hero : offre de bienvenue ===== */
+.hero-offer{justify-self:center;width:min(430px,100%);padding:42px 38px 34px;text-align:center;
+  background:linear-gradient(160deg,rgba(18,19,12,.9),rgba(5,5,2,.88));border:1px solid var(--gold);
+  box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 0 8px rgba(201,162,74,.07);backdrop-filter:blur(12px);
+  animation:rise 1.1s .35s var(--ease) both;position:relative}
+.hero-offer::before,.hero-offer::after{content:"";position:absolute;width:26px;height:26px;border:1px solid var(--gold-light)}
+.hero-offer::before{top:-9px;left:-9px;border-right:0;border-bottom:0}
+.hero-offer::after{bottom:-9px;right:-9px;border-left:0;border-top:0}
+.hero-offer .eyebrow{justify-content:center}
+.hero-offer .eyebrow::before{display:none}
+.offer-big{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(4.2rem,8vw,5.8rem);line-height:1;margin-top:14px}
+.offer-sub{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--cream);margin-top:4px}
+.offer-form{display:flex;flex-direction:column;gap:12px;margin-top:26px}
+.offer-form input{background:rgba(244,239,226,.05);border:1px solid var(--line);color:var(--cream);padding:15px 16px;font-size:.95rem;text-align:center;outline:none}
+.offer-form input:focus{border-color:var(--gold)}
+.offer-form .btn{width:100%}
+.offer-fine{font-size:.72rem;color:var(--cream-dim);margin-top:12px;letter-spacing:.04em}
+.offer-favs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px;padding-top:24px;border-top:1px solid var(--line);position:relative}
+.offer-label{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#0b0c08;padding:0 12px;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.offer-favs a{display:flex;flex-direction:column;align-items:center;gap:4px;transition:transform .4s var(--ease)}
+.offer-favs a:hover{transform:translateY(-4px)}
+.offer-favs img{width:74px;height:74px;border-radius:50%;object-fit:cover;border:1px solid var(--gold);background:#fff;margin-bottom:6px}
+.offer-favs b{font-weight:400;font-size:.7rem;line-height:1.25;color:var(--cream)}
+.offer-favs i{font-style:normal;font-family:'Cormorant Garamond',serif;color:var(--gold-light);font-size:1rem}
+@media(max-width:900px){.hero-offer{width:min(420px,100%);margin:0 auto 20px}}

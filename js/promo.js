@@ -75,7 +75,7 @@
     const claimed = store.get(CLAIMED_KEY);
     overlay.querySelector("[data-promo-ask]").hidden = !!claimed;
     overlay.querySelector("[data-promo-done]").hidden = !claimed;
-    requestAnimationFrame(() => overlay.classList.add("open"));
+    void overlay.offsetWidth; overlay.classList.add("open");
     document.body.classList.add("promo-lock");
     const input = overlay.querySelector(".promo-form input");
     if (!claimed) setTimeout(() => input.focus(), 350);
